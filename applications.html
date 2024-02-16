@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulário e JavaScript Fetch</title>
 
-    <!-- Adicionando o link para o Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
@@ -74,45 +73,39 @@
               </tr>
           </thead>
           <tbody id="tabelaCorpo">
-              <!-- Aqui serão inseridos os dados da lista -->
           </tbody>
       </table>
   </div>
     </div>
   </div>
-    <!-- Adicionando os scripts do Bootstrap e do jQuery (necessários para alguns recursos do Bootstrap) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
         function enviarDados() {
-            // Obter dados do formulário
             var formData = new FormData(document.getElementById("myForm"));
 
-            // Fazer fetch para o servidor
             fetch("post.php", {
                 method: "POST",
                 body: formData
             })
-            .then(response => response.json())  // Se necessário, ajuste conforme o tipo de resposta esperado
-            .then(data => carregarLista())   // Faça algo com a resposta do servidor
+            .then(response => response.json())  
+            .then(data => carregarLista())  
             .catch(error => console.error("Erro:", error));
         }
 
         function atualizarDados() {
-            // Obter dados do formulário
+        
             var formData = new FormData(document.getElementById("myForm"));
             console.log(formData)
-            // Fazer fetch para o servidor
 
-              // Fazer fetch para o servidor
               fetch("update.php", {
                 method: "POST",
                 body: formData
             })
-            .then(response => response.json())  // Se necessário, ajuste conforme o tipo de resposta esperado
-            .then(data => carregarLista())   // Faça algo com a resposta do servidor
+            .then(response => response.json()) 
+            .then(data => carregarLista())
             .catch(error => console.error("Erro:", error)); 
         }
 
@@ -120,10 +113,8 @@
             fetch('list.php')
                 .then(response => response.json())
                 .then(data => {
-                    // Limpa a tabela
                     document.getElementById('tabelaCorpo').innerHTML = '';
 
-                    // Preenche a tabela com os dados recebidos
                     data.forEach(item => {
                         const row = document.createElement('tr');
                         row.innerHTML = `
