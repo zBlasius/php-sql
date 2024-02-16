@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário e JavaScript Fetch</title>
+
+    <!-- Adicionando o link para o Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div style="backgroud:red">
+
+
+  <div style="width: 100%; height: 100%; display: flex; padding: 100px;">
+    <div class="container mt-5">
+        <form id="myForm">
+          <h5> Por favor, insira um item </h5> 
+
+          <div class="form-group">
+            <label for="produto">Identificador:</label>
+              <input type="text" class="form-control" id="id_produto" name="id_produto" required>
+            </div>
+
+            <div class="form-group">
+                <label for="produto">Produto:</label>
+                <input type="text" class="form-control" id="produto" name="produto" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cor">Cor:</label>
+                <input type="text" class="form-control" id="cor" name="cor" required>
+            </div>
+
+            <div class="form-group">
+                <label for="tamanho">Tamanho:</label>
+                <input type="text" class="form-control" id="tamanho" name="tamanho" required>
+            </div>
+
+            <div class="form-group">
+                <label for="deposito">Depósito:</label>
+                <input type="text" class="form-control" id="deposito" name="deposito" required>
+            </div>
+
+            <div class="form-group">
+                <label for="data_disponibilidade">Data Disponibilidade:</label>
+                <input type="date" class="form-control" id="data_disponibilidade" name="data_disponibilidade" required>
+            </div>
+
+            <div class="form-group">
+                <label for="quantidade">Quantidade:</label>
+                <input type="number" class="form-control" id="quantidade" name="quantidade" required>
+            </div>
+
+            <button type="button" class="btn btn-primary" onclick="enviarDados()">Enviar</button>
+            <button type="button" class="btn btn-primary" onclick="atualizarDados()">Atualizar</button>
+        </form>
+    </div>
+
+    <div class="container mt-5">
+      <h2>Lista de Produtos</h2>
+
+      <table class="table">
+          <thead>
+              <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Produto</th>
+                  <th scope="col">Cor</th>
+                  <th scope="col">Tamanho</th>
+                  <th scope="col">Depósito</th>
+                  <th scope="col">Data Disponibilidade</th>
+                  <th scope="col">Quantidade</th>
+              </tr>
+          </thead>
+          <tbody id="tabelaCorpo">
+              <!-- Aqui serão inseridos os dados da lista -->
+          </tbody>
+      </table>
+  </div>
+    </div>
+  </div>
+    <!-- Adicionando os scripts do Bootstrap e do jQuery (necessários para alguns recursos do Bootstrap) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function enviarDados() {
+            // Obter dados do formulário
+            var formData = new FormData(document.getElementById("myForm"));
+
+            // Fazer fetch para o servidor
+            fetch("post.php", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())  // Se necessário, ajuste conforme o tipo de resposta esperado
+            .then(data => carregarLista())   // Faça algo com a resposta do servidor
+            .catch(error => console.error("Erro:", error));
+        }
+
+        function atualizarDados() {
+            // Obter dados do formulário
+            var formData = new FormData(document.getElementById("myForm"));
+            console.log(formData)
+            // Fazer fetch para o servidor
+
+              // Fazer fetch para o servidor
+              fetch("update.php", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())  // Se necessário, ajuste conforme o tipo de resposta esperado
+            .then(data => carregarLista())   // Faça algo com a resposta do servidor
+            .catch(error => console.error("Erro:", error)); 
+        }
+
+        function carregarLista() {
+            fetch('list.php')
+                .then(response => response.json())
+                .then(data => {
+                    // Limpa a tabela
+                    document.getElementById('tabelaCorpo').innerHTML = '';
+
+                    // Preenche a tabela com os dados recebidos
+                    data.forEach(item => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${item.id}</td>
+                            <td>${item.produto}</td>
+                            <td>${item.cor}</td>
+                            <td>${item.tamanho}</td>
+                            <td>${item.deposito}</td>
+                            <td>${item.data_disponibilidade}</td>
+                            <td>${item.quantidade}</td>
+                        `;
+                        document.getElementById('tabelaCorpo').appendChild(row);
+                    });
+                })
+                .catch(error => console.error("Erro:", error));
+        }
+
+        window.onload = carregarLista()
+    </script>
+
+</body>
+</html>
+
